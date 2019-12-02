@@ -1,9 +1,78 @@
 <html>
-  <head>
-    <title>Raspberry Pi Security Feed</title>
-  </head>
-  <body>
-    <h1>Raspberry Pi Security Feed</h1>
-    <img id="bg" src="{{ url_for('video_feed') }}">
-  </body>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <title>Garage Security</title>
+    <script>
+        $(document).ready(function () {
+            $("#on").show();
+            $("#off").hide();
+	    $("#cameraON").show();
+            $("#cameraOFF").hide();
+            $("#on").click(function () {
+                $.get("http://192.168.0.222:8080/relay/8/on", function (data, status) {
+                    console.log(data + 'status' + status);
+                });
+                $("#on").hide();
+                $("#off").show();
+            });
+            $("#off").click(function () {
+                $.get("http://192.168.0.222:8080/relay/8/off", function (data, status) {
+                    console.log(data + 'status' + status);
+                });
+                $("#on").show();
+                $("#off").hide();
+            });
+            $("#onoff").click(function () {
+                $.get("http://192.168.0.222:8080/relay/1/onoff", function (data, status) {
+                    console.log(data + 'status' + status);
+                });
+            });
+	    $("#cameraON").click(function () {
+		$.get("/video_feed", function (data, status) {
+			console.log(data + 'status' + status);
+		});
+		$("#cameraON").hide();
+            	$("#cameraOFF").show();
+		$("#bg").attr("src", "/video_feed");	
+	    });
+            $("#cameraOFF").click(function () {
+		$.get("/video_stop", function (data, status) {
+			console.log(data + 'status' + status);
+		});
+		$("#cameraON").show();
+            	$("#cameraOFF").hide();
+		$("#bg").removeAttr("src");
+	    });		
+        });
+    </script>
+    <style>
+        #on, #off, #onoff {
+            width: 40px;
+            height: 40px;
+            background-color: green;
+            padding: 34px;
+        }
+
+        #cameraON, #cameraOFF {
+            width: 40px;
+            height: 40px;
+            background-color: blue;
+            padding: 34px;
+        }
+
+        #bg, #frame {
+            margin-bottom: 100px;
+        }
+    </style>
+</head>
+<body>
+<h1>Garage Door</h1><br><br>
+<a id="cameraON">Camera ON</a>
+<a id="cameraOFF">Camera OFF</a>
+<a id="on" href="#">Light ON</a>
+<a id="off" href="#">Light OFF</a>
+<a id="onoff" href="#">Garage</a>
+<br><br><br><br>
+<img id="bg">
+</body>
 </html>
